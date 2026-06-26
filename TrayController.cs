@@ -55,6 +55,7 @@ namespace sing_box_tray
         private const int ID_OPEN_DIR = 1004;
         private const int ID_EXIT = 1005;
         private const int ID_DASHBOARD = 1006;
+        private const int ID_RELOAD = 1007;
 
         [StructLayout(LayoutKind.Sequential)]
         private struct POINT
@@ -481,6 +482,9 @@ namespace sing_box_tray
             // 4. 打开配置文件夹
             AppendMenu(hMenu, MF_STRING, (IntPtr)ID_OPEN_DIR, "打开配置文件夹");
 
+            // 4.1 重载配置
+            AppendMenu(hMenu, MF_STRING, (IntPtr)ID_RELOAD, "重载配置");
+
             // 5. 开机自启动
             AppendMenu(hMenu, MF_STRING | (IsStartupEnabled() ? MF_CHECKED : MF_UNCHECKED), (IntPtr)ID_STARTUP, "开机自启动");
 
@@ -604,6 +608,18 @@ namespace sing_box_tray
                     break;
                 case ID_OPEN_DIR:
                     OpenConfigDir();
+                    break;
+                case ID_RELOAD:
+                    try
+                    {
+                        _configManager.Reload();
+                        StartCoreWithTun(_isTunMode);
+                        ShowNotification("重载配置成功", "已重新加载配置并重启内核。", NIIF_INFO);
+                    }
+                    catch (Exception ex)
+                    {
+                        ShowNotification("重载配置失败", ex.Message, NIIF_ERROR);
+                    }
                     break;
                 case ID_EXIT:
                     PostMessage(_hWnd, WM_DESTROY, IntPtr.Zero, IntPtr.Zero);

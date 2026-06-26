@@ -90,6 +90,11 @@ namespace sing_box_tray
         public ConfigManager(string dataDir)
         {
             _dataDir = dataDir;
+            Reload();
+        }
+
+        public void Reload()
+        {
             LoadOptions();
             LoadSingBoxConfig();
         }
