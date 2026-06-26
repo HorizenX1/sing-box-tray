@@ -6,17 +6,13 @@ Compiled using **.NET 8 Native AOT**, it runs as a single self-contained binary 
 
 ## Features
 
-- 🚀 **Native AOT Compiled**: Ultra-fast startup, zero external framework dependencies, and minimal system overhead.
-- 📦 **No GUI Library Overhead**: Bypasses heavy UI frameworks (like WPF or WinForms) by utilizing pure Win32 API calls for the message loop, tray icon, and context menu.
-- 🔄 **Process Supervision**: Automatically runs, monitors, and supervises the `sing-box.exe` process. If the core process unexpectedly exits, the tray supervisor will automatically restart it.
-- 🛡️ **No Config Leakage**: Feeds configuration JSON to `sing-box.exe` via `stdin` (`run -c stdin`), preventing temporary configuration file writes or exposures on the disk.
-- 🌐 **Windows System Proxy Integration**: Toggles the Windows system proxy (`127.0.0.1:<port>`) and custom bypass domains instantly via registry updates and WinInet API notifications.
-- 🛡️ **TUN Mode Support**: Easily toggle TUN mode on/off directly from the tray (requires Administrator privileges).
-- 🎨 **Dynamic Status Icons**: Uses GDI+ to draw status icons dynamically to avoid file dependencies and visual clutter:
-  - 🔵 **Blue**: Normal/Direct Mode (Core is running, System Proxy is off).
-  - 🟢 **Green**: System Proxy Mode enabled.
-  - 🟠 **Orange**: TUN Mode enabled.
-- ⚙️ **Automatic Startup**: Add or remove the tray app from Windows Startup (via Registry settings) with a single click.
+- 🚀 **Native AOT Compiled**: Ultra-fast startup, ~10MB memory footprint, zero external dependencies.
+- 🔄 **Process Supervision**: Automatically runs and restarts the `sing-box.exe` core.
+- 🛡️ **No Config Leakage**: Feeds configuration via `stdin` to prevent disk exposure.
+- 🌐 **Proxy & TUN Toggle**: Instantly switch Windows system proxy or TUN mode (with auto UAC elevation).
+- 🖱️ **Mouse Shortcuts**: Left Click for Dashboard, Shift + Left Click to toggle proxy modes.
+- 🎨 **DPI Aware Icons**: Uses Windows API to scale the tray icon sharply across resolutions.
+- ⚙️ **Automatic Startup**: One-click toggle for Windows startup.
 
 ## File Structure
 
