@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using Microsoft.Win32;
+using System.Collections.Concurrent;
 
 namespace sing_box_tray
 {
@@ -56,6 +57,8 @@ namespace sing_box_tray
         private const int ID_EXIT = 1005;
         private const int ID_DASHBOARD = 1006;
         private const int ID_RELOAD = 1007;
+
+        private const int WM_UIACTION = WM_USER + 100;
 
         [StructLayout(LayoutKind.Sequential)]
         private struct POINT
@@ -249,6 +252,7 @@ namespace sing_box_tray
 
         private bool _isTunMode;
         private bool _isProxyMode;
+        private readonly ConcurrentQueue<Action> _uiActionQueue = new();
 
         public TrayController(ConfigManager configManager, ProcessSupervisor supervisor)
         {
@@ -435,8 +439,14 @@ namespace sing_box_tray
         {
             if (state == "failed" && !string.IsNullOrEmpty(msg))
             {
-                ShowNotification("内核发生错误", msg, NIIF_ERROR);
+                PostUIAction(() => ShowNotification("内核发生错误", msg, NIIF_ERROR));
             }
+        }
+
+        private void PostUIAction(Action action)
+        {
+            _uiActionQueue.Enqueue(action);
+            PostMessage(_hWnd, WM_UIACTION, IntPtr.Zero, IntPtr.Zero);
         }
 
         private void ShowNotification(string title, string text, int iconFlag)
@@ -560,6 +570,14 @@ namespace sing_box_tray
                             {
                                 var id = (int)wParam;
                                 _instance.HandleMenuCommand(id);
+                                break;
+                            }
+                        case WM_UIACTION:
+                            {
+                                while (_instance._uiActionQueue.TryDequeue(out var action))
+                                {
+                                    action();
+                                }
                                 break;
                             }
                         case WM_DESTROY:
