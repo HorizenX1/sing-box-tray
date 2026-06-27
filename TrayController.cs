@@ -674,10 +674,16 @@ namespace sing_box_tray
             }
         }
 
+        private DateTime _lastDashboardOpenTime = DateTime.MinValue;
+
         private void OpenDashboard()
         {
             try
             {
+                if ((DateTime.Now - _lastDashboardOpenTime).TotalMilliseconds < 500)
+                    return;
+                _lastDashboardOpenTime = DateTime.Now;
+
                 string host = "127.0.0.1";
                 string port = "9090"; // default
                 if (!string.IsNullOrEmpty(_configManager.SbConfig.ExternalController))
