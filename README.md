@@ -66,7 +66,7 @@ To compile the Native AOT binary yourself, you will need the [.NET 8 SDK](https:
 
 ```bash
 # Clone the repository
-git clone https://github.com/xh104/sing-box-tray.git
+git clone https://github.com/HorizenX1/sing-box-tray.git
 cd sing-box-tray
 
 # Publish the Native AOT executable for Windows x64
