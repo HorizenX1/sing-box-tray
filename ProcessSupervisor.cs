@@ -51,7 +51,7 @@ namespace sing_box_tray
         {
             if (!File.Exists(_exePath))
             {
-                OnStateChanged?.Invoke("failed", $"sing-box executable not found: {_exePath}");
+                OnStateChanged?.Invoke("failed", I18n.ExeNotFound(_exePath));
                 return;
             }
 
@@ -88,7 +88,7 @@ namespace sing_box_tray
             }
             catch (Exception ex)
             {
-                OnStateChanged?.Invoke("failed", $"Failed to start sing-box: {ex.Message}");
+                OnStateChanged?.Invoke("failed", I18n.FailedToStart(ex.Message));
             }
         }
 
@@ -127,8 +127,8 @@ namespace sing_box_tray
                 if (_isRestarting) return;
                 _isRestarting = true;
 
-                Log("sing-box process exited unexpectedly. Restarting in 3 seconds...");
-                OnStateChanged?.Invoke("failed", "sing-box exited unexpectedly. Restarting...");
+                Log(I18n.LogExitedUnexpectedly);
+                OnStateChanged?.Invoke("failed", I18n.ExitedUnexpectedly);
 
                 // 延时 3 秒后重新启动
                 Task.Delay(3000).ContinueWith(_ =>

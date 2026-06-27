@@ -390,11 +390,11 @@ namespace sing_box_tray
                 
                 if (_isTunMode)
                 {
-                    UpdateTrayIcon(_hIconTun, "sing-box-tray (TUN 模式)");
+                    UpdateTrayIcon(_hIconTun, I18n.TrayTunMode);
                 }
                 else
                 {
-                    UpdateTrayIcon(_hIconProxy, "sing-box-tray (系统代理)");
+                    UpdateTrayIcon(_hIconProxy, I18n.TrayProxyMode);
                 }
             }
             else
@@ -403,11 +403,11 @@ namespace sing_box_tray
                 SysProxy.SetProxy(false);
                 if (_isTunMode)
                 {
-                    UpdateTrayIcon(_hIconTun, "sing-box-tray (TUN 模式)");
+                    UpdateTrayIcon(_hIconTun, I18n.TrayTunMode);
                 }
                 else
                 {
-                    UpdateTrayIcon(_hIconNormal, "sing-box-tray (运行中)");
+                    UpdateTrayIcon(_hIconNormal, I18n.TrayRunning);
                 }
             }
         }
@@ -419,18 +419,18 @@ namespace sing_box_tray
             {
                 EnableSystemProxy(false);
                 _supervisor.Start(_configManager.SbConfig.JsonWithTun);
-                UpdateTrayIcon(_hIconTun, "sing-box-tray (TUN 模式激活)");
+                UpdateTrayIcon(_hIconTun, I18n.TrayTunMode);
             }
             else
             {
                 _supervisor.Start(_configManager.SbConfig.JsonWithoutTun);
                 if (_isProxyMode)
                 {
-                    UpdateTrayIcon(_hIconProxy, "sing-box-tray (系统代理)");
+                    UpdateTrayIcon(_hIconProxy, I18n.TrayProxyMode);
                 }
                 else
                 {
-                    UpdateTrayIcon(_hIconNormal, "sing-box-tray (运行中)");
+                    UpdateTrayIcon(_hIconNormal, I18n.TrayRunning);
                 }
             }
         }
@@ -439,7 +439,7 @@ namespace sing_box_tray
         {
             if (state == "failed" && !string.IsNullOrEmpty(msg))
             {
-                PostUIAction(() => ShowNotification("内核发生错误", msg, NIIF_ERROR));
+                PostUIAction(() => ShowNotification(I18n.MsgKernelErrorTitle, msg, NIIF_ERROR));
             }
         }
 
@@ -470,38 +470,38 @@ namespace sing_box_tray
             IntPtr hMenu = CreatePopupMenu();
 
             // 1. 系统代理
-            AppendMenu(hMenu, MF_STRING | (_isProxyMode ? MF_CHECKED : MF_UNCHECKED), (IntPtr)ID_PROXY, "系统代理");
+            AppendMenu(hMenu, MF_STRING | (_isProxyMode ? MF_CHECKED : MF_UNCHECKED), (IntPtr)ID_PROXY, I18n.MenuSystemProxy);
 
             // 2. TUN 模式
             int tunFlags = MF_STRING;
             if (!CanUseTun())
             {
                 tunFlags |= MF_GRAYED;
-                AppendMenu(hMenu, tunFlags, (IntPtr)ID_TUN, "TUN 模式");
+                AppendMenu(hMenu, tunFlags, (IntPtr)ID_TUN, I18n.MenuTunMode);
             }
             else
             {
-                AppendMenu(hMenu, MF_STRING | (_isTunMode ? MF_CHECKED : MF_UNCHECKED), (IntPtr)ID_TUN, "TUN 模式");
+                AppendMenu(hMenu, MF_STRING | (_isTunMode ? MF_CHECKED : MF_UNCHECKED), (IntPtr)ID_TUN, I18n.MenuTunMode);
             }
 
             // 3. 控制面板
-            AppendMenu(hMenu, MF_STRING, (IntPtr)ID_DASHBOARD, "控制面板");
+            AppendMenu(hMenu, MF_STRING, (IntPtr)ID_DASHBOARD, I18n.MenuDashboard);
 
             AppendMenu(hMenu, MF_SEPARATOR, IntPtr.Zero, "");
 
             // 4. 打开配置文件夹
-            AppendMenu(hMenu, MF_STRING, (IntPtr)ID_OPEN_DIR, "打开配置文件夹");
+            AppendMenu(hMenu, MF_STRING, (IntPtr)ID_OPEN_DIR, I18n.MenuOpenConfigDir);
 
             // 4.1 重载配置
-            AppendMenu(hMenu, MF_STRING, (IntPtr)ID_RELOAD, "重载配置");
+            AppendMenu(hMenu, MF_STRING, (IntPtr)ID_RELOAD, I18n.MenuReloadConfig);
 
             // 5. 开机自启动
-            AppendMenu(hMenu, MF_STRING | (IsStartupEnabled() ? MF_CHECKED : MF_UNCHECKED), (IntPtr)ID_STARTUP, "开机自启动");
+            AppendMenu(hMenu, MF_STRING | (IsStartupEnabled() ? MF_CHECKED : MF_UNCHECKED), (IntPtr)ID_STARTUP, I18n.MenuStartup);
 
             AppendMenu(hMenu, MF_SEPARATOR, IntPtr.Zero, "");
 
             // 6. 退出
-            AppendMenu(hMenu, MF_STRING, (IntPtr)ID_EXIT, "退出");
+            AppendMenu(hMenu, MF_STRING, (IntPtr)ID_EXIT, I18n.MenuExit);
 
             POINT pt;
             GetCursorPos(out pt);
@@ -632,11 +632,11 @@ namespace sing_box_tray
                     {
                         _configManager.Reload();
                         StartCoreWithTun(_isTunMode);
-                        ShowNotification("重载配置成功", "已重新加载配置并重启内核。", NIIF_INFO);
+                        ShowNotification(I18n.MsgReloadSuccessTitle, I18n.MsgReloadSuccess, NIIF_INFO);
                     }
                     catch (Exception ex)
                     {
-                        ShowNotification("重载配置失败", ex.Message, NIIF_ERROR);
+                        ShowNotification(I18n.MsgReloadFailedTitle, ex.Message, NIIF_ERROR);
                     }
                     break;
                 case ID_EXIT:

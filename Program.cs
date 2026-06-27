@@ -86,7 +86,7 @@ namespace sing_box_tray
                 // 1. 单实例防护，防止多次启动
                 if (!AcquireMutex())
                 {
-                    MessageBox(IntPtr.Zero, "sing-box-tray 已经在运行中！", "提示", MB_OK | MB_ICONINFORMATION);
+                    MessageBox(IntPtr.Zero, I18n.MsgAlreadyRunning, I18n.MsgNoticeTitle, MB_OK | MB_ICONINFORMATION);
                     return;
                 }
 
@@ -101,7 +101,7 @@ namespace sing_box_tray
                     }
                     catch (Exception ex)
                     {
-                        MessageBox(IntPtr.Zero, $"创建 data 目录失败: {ex.Message}", "错误", MB_OK | MB_ICONERROR);
+                        MessageBox(IntPtr.Zero, I18n.MsgCreateDataDirFailed(ex.Message), I18n.MsgErrorTitle, MB_OK | MB_ICONERROR);
                         return;
                     }
                 }
@@ -122,7 +122,7 @@ namespace sing_box_tray
                 }
                 catch (Exception ex)
                 {
-                    MessageBox(IntPtr.Zero, $"加载配置文件失败: {ex.Message}", "错误", MB_OK | MB_ICONERROR);
+                    MessageBox(IntPtr.Zero, I18n.MsgLoadConfigFailed(ex.Message), I18n.MsgErrorTitle, MB_OK | MB_ICONERROR);
                     return;
                 }
 
@@ -130,7 +130,7 @@ namespace sing_box_tray
                 string sbPath = Path.Combine(configManager.Options.SbDir, "sing-box.exe");
                 if (!File.Exists(sbPath))
                 {
-                    MessageBox(IntPtr.Zero, $"未在 [{configManager.Options.SbDir}] 目录中发现内核文件 sing-box.exe，请将 sing-box 内核放入该目录后重试。", "未发现内核", MB_OK | MB_ICONWARNING);
+                    MessageBox(IntPtr.Zero, I18n.MsgKernelNotFound(configManager.Options.SbDir), I18n.MsgKernelNotFoundTitle, MB_OK | MB_ICONWARNING);
                     return;
                 }
 
@@ -150,7 +150,7 @@ namespace sing_box_tray
             }
             catch (Exception ex)
             {
-                MessageBox(IntPtr.Zero, $"程序发生未处理异常: {ex.ToString()}", "致命错误", MB_OK | MB_ICONERROR);
+                MessageBox(IntPtr.Zero, I18n.MsgUnhandledException(ex.ToString()), I18n.MsgFatalErrorTitle, MB_OK | MB_ICONERROR);
             }
         }
 
